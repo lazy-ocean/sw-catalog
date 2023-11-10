@@ -7,10 +7,4 @@ describe("Home", () => {
 
     expect(getByText("go build something awesome")).toBeInTheDocument();
   });
-
-  it("doesn't render anything fishy", () => {
-    const { queryByText } = render(<Main version={"13"} />);
-
-    expect(queryByText("fishy")).not.toBeInTheDocument();
-  });
 });

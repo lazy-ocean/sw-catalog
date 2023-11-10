@@ -3,7 +3,7 @@ import "./global.css";
 
 export const metadata = {
   title: "Home",
-  description: "Welcome to Next.js",
+  description: "SWAPI data",
 };
 
 export default function RootLayout({

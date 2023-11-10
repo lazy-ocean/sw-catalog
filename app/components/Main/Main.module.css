@@ -1,0 +1,26 @@
+.header {
+  font-size: 2rem;
+  font-weight: 200;
+}
+
+.container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 1rem;
+}
+
+.gallery {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 2rem;
+}
+
+.gallery p {
+  font-size: 1.5rem;
+  margin: 0.5rem;
+}
+
+.gallery > div img {
+  max-width: 100%;
+}

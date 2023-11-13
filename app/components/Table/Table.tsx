@@ -1,5 +1,5 @@
 "use client";
-import { useMemo, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import {
   createColumnHelper,
   flexRender,
@@ -12,11 +12,56 @@ import {
 } from "@tanstack/react-table";
 import { Person, SortingDirection, TableProps } from "../../interfaces";
 import { Pagination } from "../Pagination/Pagination";
+import { usePathname, useRouter, useSearchParams } from "next/navigation";
 
 export const Table = ({ people, planets }: TableProps) => {
   const [data, setData] = useState(people);
   const [sorting, setSorting] = useState<SortingState>();
+  const [nameFilterValue, setNameFilterValue] = useState("");
   const columnHelper = createColumnHelper<Person>();
+  const searchParams = useSearchParams();
+  const pathname = usePathname();
+
+  const router = useRouter();
+
+  useEffect(() => {
+    const params = new URLSearchParams(searchParams);
+
+    if (params.size > 0) {
+      const sortingQuery = params.get("sortBy");
+      if (sortingQuery) {
+        const [id, query] = sortingQuery.split(":");
+        setSorting([{ id, desc: query === SortingDirection.desc }]);
+      }
+
+      const filterQuery = params.get("name");
+      if (filterQuery) setNameFilterValue(filterQuery);
+    }
+  }, [searchParams]);
+
+  useEffect(() => {
+    const params = new URLSearchParams(searchParams);
+
+    if (!nameFilterValue && params.get("name")) {
+      params.delete("name");
+    }
+    if (nameFilterValue) {
+      params.set("name", nameFilterValue);
+    }
+    if ((!sorting || !sorting.length) && params.get("sortBy")) {
+      params.delete("sortBy");
+    }
+    if (sorting && sorting.length > 0) {
+      params.set(
+        "sortBy",
+        `${sorting[0].id}:${
+          sorting[0].desc ? SortingDirection.desc : SortingDirection.asc
+        }`
+      );
+    }
+
+    router.push(pathname + "?" + params.toString());
+  }, [pathname, searchParams, sorting, router, nameFilterValue]);
 
   const columns = useMemo(
     () => [
@@ -78,8 +123,12 @@ export const Table = ({ people, planets }: TableProps) => {
     <>
       <input
         type="text"
-        onChange={(e) => nameColumn?.setFilterValue(e.target.value)}
+        onChange={(e) => {
+          setNameFilterValue(e.target.value);
+          nameColumn?.setFilterValue(e.target.value);
+        }}
         placeholder={`Filter by name...`}
+        value={nameFilterValue}
       />
       <table>
         <thead>

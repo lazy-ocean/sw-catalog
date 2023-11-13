@@ -16,6 +16,7 @@ export interface Person {
   created: string; // timestamp
   edited: string; // timestamp
   homeworld: string; // set
+  homeworldData: { id: string; name: string };
   // not required by task
   /*  hair_color: string; */
   /*   skin_color: string; */

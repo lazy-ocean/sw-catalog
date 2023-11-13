@@ -26,20 +26,24 @@ async function getData(): Promise<{
     await fetchPeopleData(API_LINK);
     data.people = peopleList;
 
-    const planetData: { [key: string]: PlanetData } = {};
+    const planetsData: { [key: string]: PlanetData } = {};
 
     await Promise.all(
       peopleList.map(async (person) => {
         const homeworldURL = person.homeworld;
+        let planetData = null;
 
-        if (!planetData[homeworldURL]) {
+        if (!planetsData[homeworldURL]) {
           const planetResponse = await fetch(homeworldURL);
-          planetData[homeworldURL] = await planetResponse.json();
+          planetData = await planetResponse.json();
+          planetsData[planetData.name] = planetData;
         }
+
+        person.homeworld = planetData.name;
       })
     );
 
-    data.planets = planetData;
+    data.planets = planetsData;
   } catch (e) {
     throw new Error("Failed to fetch data");
   }

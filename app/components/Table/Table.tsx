@@ -13,9 +13,12 @@ import {
 import { Person, SortingDirection, TableProps } from "../../interfaces";
 import { Pagination } from "../Pagination/Pagination";
 import { usePathname, useRouter, useSearchParams } from "next/navigation";
+import { Modal } from "../Modal/Modal";
+import { ModalContent } from "../Modal/ModalContent";
 
 export const Table = ({ people, planets }: TableProps) => {
   const [data, setData] = useState(people);
+  const [isModalOpen, setIsModalOpen] = useState<string | false>(false);
   const [sorting, setSorting] = useState<SortingState>();
   const [nameFilterValue, setNameFilterValue] = useState("");
   const columnHelper = createColumnHelper<Person>();
@@ -82,7 +85,11 @@ export const Table = ({ people, planets }: TableProps) => {
       }),
       columnHelper.accessor((row) => row.homeworld, {
         id: "homeworld",
-        cell: (info) => <i>{info.getValue()}</i>,
+        cell: (info) => (
+          <button onClick={() => setIsModalOpen(info.getValue())}>
+            {info.getValue()}
+          </button>
+        ),
         header: () => <span>Homeworld</span>,
       }),
       columnHelper.accessor((row) => row.created, {
@@ -168,6 +175,11 @@ export const Table = ({ people, planets }: TableProps) => {
           ))}
         </tbody>
       </table>
+      {isModalOpen && (
+        <Modal isOpen={!!isModalOpen} onClose={setIsModalOpen}>
+          <ModalContent data={planets[isModalOpen]} />
+        </Modal>
+      )}
       <Pagination table={table} />
     </>
   );

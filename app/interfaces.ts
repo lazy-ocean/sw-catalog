@@ -41,6 +41,7 @@ export interface PlanetData {
   population: string;
   diameter: string;
   climate: string;
+  color: string;
   // not required by task
   /*   rotation_period: "unknown";
   orbital_period: "unknown"; */

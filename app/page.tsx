@@ -1,3 +1,4 @@
+import uniqolor from "uniqolor";
 import Main from "./components/Main/Main";
 import { Person, PlanetData, SwListData } from "./interfaces";
 
@@ -36,7 +37,11 @@ async function getData(): Promise<{
         if (!planetsData[homeworldURL]) {
           const planetResponse = await fetch(homeworldURL);
           planetData = await planetResponse.json();
-          planetsData[planetData.name] = planetData;
+          const color = uniqolor(planetData.name as string, {
+            saturation: 50,
+            lightness: [70, 90],
+          }).color;
+          planetsData[planetData.name] = { ...planetData, color };
         }
 
         person.homeworld = planetData.name;

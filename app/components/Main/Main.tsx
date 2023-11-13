@@ -6,7 +6,7 @@ import { Table } from "../Table/Table";
 const Main = ({ people, planets }: TableProps) => {
   return (
     <main className={styles.header}>
-      <h3>Future table</h3>
+      <h3>Star Wars People catalog</h3>
       <Table people={people} planets={planets} />
     </main>
   );

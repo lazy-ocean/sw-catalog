@@ -1,0 +1,27 @@
+.searchWrapper {
+  position: relative;
+  width: 100%;
+}
+
+.searchIcon {
+  position: absolute;
+  top: 35%;
+  left: 10px;
+  transform: translateY(-50%);
+  height: 1.2rem;
+}
+
+.input {
+  padding: var(--spacing-xs);
+  padding-left: 40px;
+  margin-bottom: var(--spacing-s);
+  width: 100%;
+  border: 0;
+  border-bottom: 1px solid var(--palette-border);
+  font-size: 1.2rem;
+}
+
+.input::placeholder {
+  font-size: 1rem;
+  color: color-mix(in srgb, var(--palette-mainText) 40%, transparent);
+}

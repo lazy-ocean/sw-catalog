@@ -1,0 +1,65 @@
+.table {
+  width: 100%;
+  /*   border: 1px solid #cecece; */
+  /*   outline: 1px solid #cecece; */
+  border-collapse: collapse;
+  /*   border-radius: 5px; */
+  overflow: hidden;
+}
+
+.row {
+  height: 4.5rem;
+  border-bottom: 1px solid var(--palette-border);
+}
+
+.row:hover {
+  background-color: var(--palette-hover) !important;
+}
+
+.cell {
+  padding: var(--spacing-s);
+}
+
+.headerCell {
+  display: flex;
+  gap: var(--spacing-xs);
+}
+
+.header {
+  padding: var(--spacing-s);
+  background-color: #efefef;
+  text-align: left;
+}
+
+.header:nth-child(1),
+.cell:nth-child(1) {
+  width: 20%;
+}
+
+.header:nth-child(2) div,
+.header:nth-child(3) div {
+  justify-content: flex-end;
+}
+
+.cell:nth-child(2),
+.cell:nth-child(3) {
+  text-align: end;
+}
+
+.table img {
+  height: 2rem;
+}
+
+.header img {
+  height: 1.2rem;
+}
+
+.planetButton {
+  background-color: var(--color);
+  border: none;
+  padding: var(--spacing-xs);
+  border-radius: 5px;
+  cursor: pointer;
+  text-decoration: underline;
+  height: 2rem;
+}

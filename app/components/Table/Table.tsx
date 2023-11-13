@@ -6,12 +6,15 @@ import {
   getCoreRowModel,
   getPaginationRowModel,
   useReactTable,
+  SortingState,
+  getSortedRowModel,
 } from "@tanstack/react-table";
-import { Person, TableProps } from "../../interfaces";
+import { Person, SortingDirection, TableProps } from "../../interfaces";
 import { Pagination } from "../Pagination/Pagination";
 
 export const Table = ({ people, planets }: TableProps) => {
   const [data, setData] = useState(people);
+  const [sorting, setSorting] = useState<SortingState>();
   const columnHelper = createColumnHelper<Person>();
 
   const columns = useMemo(
@@ -47,34 +50,54 @@ export const Table = ({ people, planets }: TableProps) => {
         header: () => <span>Edited at</span>,
       }),
     ],
-    []
+    [columnHelper]
   );
 
   const table = useReactTable({
     data,
     columns,
     getCoreRowModel: getCoreRowModel(),
+    getSortedRowModel: getSortedRowModel(),
     getPaginationRowModel: getPaginationRowModel(),
+    state: {
+      sorting,
+    },
+    onSortingChange: setSorting,
   });
+
+  const sortingOptions = {
+    [SortingDirection.asc]: "🔼",
+    [SortingDirection.desc]: "🔽",
+    [SortingDirection.false]: "🔽",
+  };
 
   return (
     <>
       <table>
         <thead>
-          {table.getHeaderGroups().map((headerGroup) => (
-            <tr key={headerGroup.id}>
-              {headerGroup.headers.map((header) => (
-                <th key={header.id}>
-                  {header.isPlaceholder
-                    ? null
-                    : flexRender(
-                        header.column.columnDef.header,
-                        header.getContext()
+          {table.getHeaderGroups().map((headerGroup) => {
+            return (
+              <tr key={headerGroup.id}>
+                {headerGroup.headers.map((header) => {
+                  return (
+                    <th key={header.id}>
+                      {header.isPlaceholder ? null : (
+                        <div onClick={header.column.getToggleSortingHandler()}>
+                          {flexRender(
+                            header.column.columnDef.header,
+                            header.getContext()
+                          )}
+                          {sortingOptions[
+                            header.column.getIsSorted() as SortingDirection
+                          ] ?? null}
+                        </div>
                       )}
-                </th>
-              ))}
-            </tr>
-          ))}
+                    </th>
+                  );
+                })}
+              </tr>
+            );
+          })}
         </thead>
         <tbody>
           {table.getRowModel().rows.map((row) => (

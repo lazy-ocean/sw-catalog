@@ -52,3 +52,9 @@ export interface PlanetData {
   edited: "2014-12-20T20:58:18.452000Z";
   url: "https://swapi.dev/api/planets/20/"; */
 }
+
+export enum SortingDirection {
+  asc = "asc",
+  desc = "desc",
+  false = "false",
+}

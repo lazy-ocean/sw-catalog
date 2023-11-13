@@ -8,6 +8,7 @@ import {
   useReactTable,
   SortingState,
   getSortedRowModel,
+  getFilteredRowModel,
 } from "@tanstack/react-table";
 import { Person, SortingDirection, TableProps } from "../../interfaces";
 import { Pagination } from "../Pagination/Pagination";
@@ -57,6 +58,7 @@ export const Table = ({ people, planets }: TableProps) => {
     data,
     columns,
     getCoreRowModel: getCoreRowModel(),
+    getFilteredRowModel: getFilteredRowModel(),
     getSortedRowModel: getSortedRowModel(),
     getPaginationRowModel: getPaginationRowModel(),
     state: {
@@ -70,9 +72,15 @@ export const Table = ({ people, planets }: TableProps) => {
     [SortingDirection.desc]: "🔽",
     [SortingDirection.false]: "🔽",
   };
+  const nameColumn = table.getAllColumns().find((col) => col.id === "name");
 
   return (
     <>
+      <input
+        type="text"
+        onChange={(e) => nameColumn?.setFilterValue(e.target.value)}
+        placeholder={`Filter by name...`}
+      />
       <table>
         <thead>
           {table.getHeaderGroups().map((headerGroup) => {

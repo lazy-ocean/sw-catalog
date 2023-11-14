@@ -1,17 +1,18 @@
 "use client";
-import { useEffect, useMemo, useState } from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
 import {
   createColumnHelper,
   flexRender,
   getCoreRowModel,
-  getPaginationRowModel,
   useReactTable,
   SortingState,
   getSortedRowModel,
   getFilteredRowModel,
+  Row,
 } from "@tanstack/react-table";
+import { Table as TableInterface } from "@tanstack/react-table";
+import { useVirtual } from "react-virtual";
 import { Person, SortingDirection, TableProps } from "../../interfaces";
-import { Pagination } from "../Pagination/Pagination";
 import { usePathname, useRouter, useSearchParams } from "next/navigation";
 import { Modal } from "../Modal/Modal";
 import { ModalContent } from "../Modal/ModalContent";
@@ -19,15 +20,23 @@ import { SearchField } from "../SearchField/SearchField";
 import styles from "./Table.module.css";
 import { formatDate } from "../../utils/formatDate";
 
+const FormatedTableValue = ({ value }: { value: string }) => {
+  return value !== "unknown" ? (
+    <span>{value}</span>
+  ) : (
+    <img src="/question.png" alt="unknown data" />
+  );
+};
+
 export const Table = ({ people, planets }: TableProps) => {
   const data = people;
   const [isModalOpen, setIsModalOpen] = useState<string | false>(false);
-  const [sorting, setSorting] = useState<SortingState>();
+  const [sorting, setSorting] = useState<SortingState>([]);
   const [nameFilterValue, setNameFilterValue] = useState("");
   const columnHelper = createColumnHelper<Person>();
   const searchParams = useSearchParams();
   const pathname = usePathname();
-
+  const tableContainerRef = useRef<HTMLDivElement>(null);
   const router = useRouter();
 
   useEffect(() => {
@@ -83,16 +92,26 @@ export const Table = ({ people, planets }: TableProps) => {
     );
   };
 
-  const FormatedTableValue = ({ value }: { value: string }) => {
-    return value !== "unknown" ? (
-      <span>{value}</span>
-    ) : (
-      <img src="/question.png" alt="unknown data" />
-    );
-  };
-
   const columns = useMemo(
     () => [
+      {
+        Header: "No",
+        id: "id",
+        cell: ({
+          row,
+          table,
+        }: {
+          row: Row<Person>;
+          table: TableInterface<Person>;
+        }) => (
+          <span>
+            {(table
+              .getSortedRowModel()
+              ?.flatRows?.findIndex((flatRow) => flatRow.id === row.id) || 0) +
+              1}
+          </span>
+        ),
+      },
       columnHelper.accessor((row) => row.name, {
         id: "name",
         cell: (info) => (
@@ -137,12 +156,21 @@ export const Table = ({ people, planets }: TableProps) => {
     getCoreRowModel: getCoreRowModel(),
     getFilteredRowModel: getFilteredRowModel(),
     getSortedRowModel: getSortedRowModel(),
-    getPaginationRowModel: getPaginationRowModel(),
+    /* getPaginationRowModel: getPaginationRowModel(), */
     state: {
       sorting,
     },
     onSortingChange: setSorting,
   });
+
+  const { rows } = table.getRowModel();
+  const rowVirtualizer = useVirtual({
+    parentRef: tableContainerRef,
+    size: rows.length,
+    overscan: 10,
+  });
+
+  const { virtualItems: virtualRows, totalSize } = rowVirtualizer;
 
   const sortingOptions = {
     [SortingDirection.asc]: "/arrow-down.png",
@@ -150,7 +178,14 @@ export const Table = ({ people, planets }: TableProps) => {
     [SortingDirection.false]: "/unfold.png",
   };
   const nameColumn = table.getAllColumns().find((col) => col.id === "name");
-  console.log(planets);
+
+  // to ensure correct scrolling
+  const paddingTop = virtualRows.length > 0 ? virtualRows?.[0]?.start || 0 : 0;
+  const paddingBottom =
+    virtualRows.length > 0
+      ? totalSize - (virtualRows?.[virtualRows.length - 1]?.end || 0)
+      : 0;
+
   return (
     <>
       <SearchField
@@ -160,61 +195,79 @@ export const Table = ({ people, planets }: TableProps) => {
         }}
         value={nameFilterValue}
       />
-      <table className={styles.table}>
-        <thead>
-          {table.getHeaderGroups().map((headerGroup) => {
-            return (
-              <tr key={headerGroup.id}>
-                {headerGroup.headers.map((header) => {
-                  return (
-                    <th
-                      key={header.id}
-                      className={`column-${header.id} ${styles.header}`}
-                    >
-                      {header.isPlaceholder ? null : (
-                        <div
-                          onClick={header.column.getToggleSortingHandler()}
-                          className={styles.headerCell}
-                        >
-                          {flexRender(
-                            header.column.columnDef.header,
-                            header.getContext()
-                          )}
-                          <img
-                            src={
-                              sortingOptions[
-                                header.column.getIsSorted() as SortingDirection
-                              ] ?? null
-                            }
-                            alt={`Sort column ${header.id}`}
-                          />
-                        </div>
-                      )}
-                    </th>
-                  );
-                })}
+      <div ref={tableContainerRef} className={styles.container}>
+        <table className={styles.table}>
+          <thead className={styles.header}>
+            {table.getHeaderGroups().map((headerGroup) => {
+              return (
+                <tr key={headerGroup.id}>
+                  {headerGroup.headers.map((header) => {
+                    return (
+                      <th
+                        key={header.id}
+                        className={`column-${header.id} ${styles.headerCell}`}
+                      >
+                        {header.isPlaceholder ? null : (
+                          <div
+                            onClick={header.column.getToggleSortingHandler()}
+                          >
+                            {flexRender(
+                              header.column.columnDef.header,
+                              header.getContext()
+                            )}
+                            <img
+                              src={
+                                sortingOptions[
+                                  header.column.getIsSorted() as SortingDirection
+                                ] ?? null
+                              }
+                              alt={`Sort column ${header.id}`}
+                            />
+                          </div>
+                        )}
+                      </th>
+                    );
+                  })}
+                </tr>
+              );
+            })}
+          </thead>
+          <tbody className={styles.tbody}>
+            {paddingTop > 0 && (
+              <tr>
+                <td style={{ height: `${paddingTop}px` }} />
               </tr>
-            );
-          })}
-        </thead>
-        <tbody className={styles.tbody}>
-          {table.getRowModel().rows.map((row) => (
-            <tr key={row.id} className={styles.row}>
-              {row.getVisibleCells().map((cell) => (
-                <td key={cell.id} className={styles.cell}>
-                  {flexRender(cell.column.columnDef.cell, cell.getContext())}
-                </td>
-              ))}
-            </tr>
-          ))}
-        </tbody>
-      </table>
+            )}
+            {virtualRows.map((virtualRow) => {
+              const row = rows[virtualRow.index];
+              return (
+                <tr key={row.id} className={styles.row}>
+                  {row.getVisibleCells().map((cell) => {
+                    return (
+                      <td key={cell.id} className={styles.cell}>
+                        {flexRender(
+                          cell.column.columnDef.cell,
+                          cell.getContext()
+                        )}
+                      </td>
+                    );
+                  })}
+                </tr>
+              );
+            })}
+            {paddingBottom > 0 && (
+              <tr>
+                <td style={{ height: `${paddingBottom}px` }} />
+              </tr>
+            )}
+          </tbody>
+        </table>
+      </div>
       {isModalOpen && (
         <Modal isOpen={!!isModalOpen} onClose={setIsModalOpen}>
           <ModalContent data={planets[isModalOpen]} />
         </Modal>
       )}
-      <Pagination table={table} />
     </>
   );
 };

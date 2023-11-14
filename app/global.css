@@ -61,3 +61,7 @@ span {
 img {
   display: block;
 }
+
+.errorPage {
+  text-align: center;
+}

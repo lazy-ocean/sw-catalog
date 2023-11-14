@@ -49,7 +49,7 @@ export const Table = ({ people, planets }: TableProps) => {
   useEffect(() => {
     const params = new URLSearchParams(searchParams);
 
-    if (params.size > 0) {
+    if (params?.size > 0) {
       const sortingQuery = params.get("sortBy");
       if (sortingQuery) {
         const [id, query] = sortingQuery.split(":");

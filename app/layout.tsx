@@ -22,8 +22,19 @@ export default function RootLayout({
     <html lang="en" className={roboto.className}>
       <Head>
         <link rel="icon" href="/favicon.ico" sizes="any" />
+        <link
+          rel="icon"
+          href="/icon?<generated>"
+          type="image/<generated>"
+          sizes="<generated>"
+        />
       </Head>
-      <body>{children}</body>
+      <body>
+        {children}
+        <footer>
+          Made by <a href="https://github.com/lazy-ocean">Vladlena Panchenko</a>
+        </footer>
+      </body>
     </html>
   );
 }

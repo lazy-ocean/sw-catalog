@@ -1,6 +1,6 @@
 .modal {
   padding: var(--spacing-l);
-  min-width: 40%;
+  min-width: 50%;
   min-height: 25%;
   border: none;
   display: flex;

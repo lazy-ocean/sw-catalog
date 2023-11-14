@@ -1,12 +1,11 @@
 .container {
-  max-height: 500px;
+  max-height: 800px;
   overflow: auto;
   border-bottom: var(--border);
 }
 
 .table {
   width: 100%;
-  border-collapse: separate;
 }
 
 .row {

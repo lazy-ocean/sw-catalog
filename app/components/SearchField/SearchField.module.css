@@ -18,10 +18,12 @@
   width: 100%;
   border: 0;
   border-bottom: 1px solid var(--palette-border);
-  font-size: 1.2rem;
+  font-size: 1rem;
+  border-radius: 20px;
+  background-color: #f5f5f5;
 }
 
 .input::placeholder {
-  font-size: 1rem;
+  font-size: 0.9rem;
   color: color-mix(in srgb, var(--palette-mainText) 40%, transparent);
 }

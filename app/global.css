@@ -1,6 +1,6 @@
 :root {
   --palette-border: #e7e6e6;
-  --palette-hover: #f2f6f9;
+  --palette-hover: #f8fafc;
   --palette-mainText: #1c1c1c;
 
   --spacing-s: 1rem;
@@ -33,4 +33,9 @@ a {
 span {
   font-weight: 300;
   font-style: normal;
+  font-size: 0.9rem;
+}
+
+img {
+  display: block;
 }

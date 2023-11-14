@@ -17,6 +17,7 @@ import { Modal } from "../Modal/Modal";
 import { ModalContent } from "../Modal/ModalContent";
 import { SearchField } from "../SearchField/SearchField";
 import styles from "./Table.module.css";
+import { formatDate } from "../../utils/formatDate";
 
 export const Table = ({ people, planets }: TableProps) => {
   const data = people;
@@ -68,20 +69,6 @@ export const Table = ({ people, planets }: TableProps) => {
     router.push(pathname + "?" + params.toString());
   }, [pathname, searchParams, sorting, router, nameFilterValue]);
 
-  const FormattedDate = ({ timestamp }: { timestamp: string }) => {
-    const date = new Date(timestamp);
-
-    const formattedDate = date.toLocaleString("en-GB", {
-      year: "numeric",
-      month: "long",
-      day: "numeric",
-      hour: "2-digit",
-      minute: "2-digit",
-      second: "2-digit",
-    });
-    return <span>{formattedDate}</span>;
-  };
-
   const PlanetButton = ({ value }: { value: string }) => {
     return value !== "unknown" ? (
       <button
@@ -132,12 +119,12 @@ export const Table = ({ people, planets }: TableProps) => {
       }),
       columnHelper.accessor((row) => row.created, {
         id: "created",
-        cell: (info) => <FormattedDate timestamp={info.getValue()} />,
+        cell: (info) => <span>{formatDate(info.getValue())}</span>,
         header: () => <span>Created at</span>,
       }),
       columnHelper.accessor((row) => row.edited, {
         id: "edited",
-        cell: (info) => <FormattedDate timestamp={info.getValue()} />,
+        cell: (info) => <span>{formatDate(info.getValue())}</span>,
         header: () => <span>Edited at</span>,
       }),
     ],

@@ -1,24 +1,35 @@
-This is a [Next.js](https://nextjs.org/) boilerplate to create SSR-d apps without breaking a sweat. 🥵
+# Star Wars People Catalogue App
 
-## Stack and tools
+This is a Star Wars people catalogue table app, utilizing the **[Tanstack Table](https://tanstack.com/table/v8)** as a headless table API helper. Developed with Next.js v14 and RSC (React Server Components).
 
-- **[Next.js](https://nextjs.org/)** with **TypeScript** integration: React web framework
-- **[Jest](https://jestjs.io/)** + **[React Testing Library](https://testing-library.com/docs/react-testing-library/intro/)**: unit and React components testing
-- **[Prettier](https://prettier.io/docs/en/index.html)** + **[eslint](https://eslint.org/)**: coding in style
-- **[Husky](https://github.com/typicode/husky)** + **[commitlint](https://github.com/conventional-changelog/commitlint)**: auto-linting commits with Husky for meeting the [conventional commit format](https://www.conventionalcommits.org/en/v1.0.0/)
-- **[css-modules](<[https://styled-components.com/](https://nextjs.org/docs/app/building-your-application/styling/css-modules)>)**: styling your app.
+## Deploy
 
-## Run locally
+Deployed on Vercel ✨: https://sw-catalog.vercel.app/
 
-1. Clone this repo as a template
+## Features
 
-[![Use this template](https://img.shields.io/badge/Genereate-Use_this_template-2ea44f?style=for-the-badge)](https://github.com/lazy-ocean/next-js-boilerplate/generate)
+- **Tanstack Table Integration**: Utilizes the Tanstack Table to manage tabular data.
+- **Sorting and Filtering**: allows sorting across all table columns and adds a name-based search/filter feature, with state kept in the URL.
+- **Performance Optimization**: table performance is optimized by leveraging React Server Components (RSC) and virtualization for rendering table rows on scroll (dynamically reusing DOM nodes in viewport without overpopulating the DOM tree).
+- **Prefetched Data**: table data is prefetched on the server due to the limited and known dataset, so the performance is better compared to lazy loading, considering the absence of backend support for sorting and filtering via the API.
+- **Modal Integration**: uses a native HTML dialog to display detailed homeplanet data for each person.
 
-See the [GitHub Docs](https://docs.github.com/en/repositories/creating-and-managing-repositories/creating-a-repository-from-a-template) for more info on using a template repo.
+## Tech Stack
+
+- **Next.js v14**: a fab framework for server-rendered React applications.
+- **RSC (React Server Components)**: server-side rendering and great interactivity.
+- **Tanstack Table**: efficient table data handling without breaking a sweat.
+- **CSS modules**: more performant and reliant with SSR apps than CSS-in-JS.
+
+## Run Locally
+
+Follow these steps to run the application locally:
+
+1. Clone this repository
 
 2. Install all dependencies:
 
-```
+```bash
 $ npm install
 # or
 $ yarn
@@ -26,7 +37,7 @@ $ yarn
 
 3. Initialize Husky
 
-```
+```bash
 $ npm run prepare
 # or
 $ yarn husky install
@@ -34,15 +45,10 @@ $ yarn husky install
 
 4. Run the deployment server
 
-```
+```bash
 $ npm run dev
 # or
 $ yarn dev
 ```
 
 5. Your app is served at http://localhost:3000/
-
-## Changelog
-
-- **Nov-22-2023**: upgrade to Next.js 14.0.2, React 18.2.0, TypeScript 4.8.4, remove styled-components in favour of css modules
-- **Jun-22-2023**: first version, Next.js 12, React 18.1.0, TypeScript 4.5.5

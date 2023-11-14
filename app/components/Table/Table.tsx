@@ -81,9 +81,7 @@ export const Table = ({ people, planets }: TableProps) => {
       );
     }
 
-    if (params?.size > 0) {
-      router.push(pathname + "?" + params.toString());
-    }
+    router.push(pathname + "?" + params.toString());
   }, [pathname, searchParams, sorting, router, nameFilterValue]);
 
   const columns = useMemo(

@@ -80,3 +80,10 @@
   text-decoration: underline;
   height: 2rem;
 }
+
+.noResultsMsg {
+  padding: var(--spacing-s);
+  font-size: var(--font-size-regular);
+  display: inline-block;
+  width: 100%;
+}

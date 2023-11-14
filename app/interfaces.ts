@@ -5,7 +5,7 @@
 } */
 
 export interface TableProps {
-  people?: Person[];
+  people: Person[];
   planets: { [key: string]: PlanetData };
 }
 

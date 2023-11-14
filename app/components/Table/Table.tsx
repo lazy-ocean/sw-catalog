@@ -83,7 +83,7 @@ export const Table = ({ people, planets }: TableProps) => {
       <button
         onClick={() => setIsModalOpen(value)}
         className={styles.planetButton}
-        style={{ "--color": planets[value].color }}
+        style={{ ["--color" as string]: planets[value].color }}
       >
         {value}
       </button>
@@ -147,6 +147,7 @@ export const Table = ({ people, planets }: TableProps) => {
         header: () => <span>Edited at</span>,
       }),
     ],
+    // eslint-disable-next-line react-hooks/exhaustive-deps
     [columnHelper]
   );
 
@@ -156,7 +157,6 @@ export const Table = ({ people, planets }: TableProps) => {
     getCoreRowModel: getCoreRowModel(),
     getFilteredRowModel: getFilteredRowModel(),
     getSortedRowModel: getSortedRowModel(),
-    /* getPaginationRowModel: getPaginationRowModel(), */
     state: {
       sorting,
     },
@@ -196,72 +196,78 @@ export const Table = ({ people, planets }: TableProps) => {
         value={nameFilterValue}
       />
       <div ref={tableContainerRef} className={styles.container}>
-        <table className={styles.table}>
-          <thead className={styles.header}>
-            {table.getHeaderGroups().map((headerGroup) => {
-              return (
-                <tr key={headerGroup.id}>
-                  {headerGroup.headers.map((header) => {
-                    return (
-                      <th
-                        key={header.id}
-                        className={`column-${header.id} ${styles.headerCell}`}
-                      >
-                        {header.isPlaceholder ? null : (
-                          <div
-                            onClick={header.column.getToggleSortingHandler()}
-                          >
-                            {flexRender(
-                              header.column.columnDef.header,
-                              header.getContext()
-                            )}
-                            <img
-                              src={
-                                sortingOptions[
-                                  header.column.getIsSorted() as SortingDirection
-                                ] ?? null
-                              }
-                              alt={`Sort column ${header.id}`}
-                            />
-                          </div>
-                        )}
-                      </th>
-                    );
-                  })}
+        {virtualRows.length ? (
+          <table className={styles.table}>
+            <thead className={styles.header}>
+              {table.getHeaderGroups().map((headerGroup) => {
+                return (
+                  <tr key={headerGroup.id}>
+                    {headerGroup.headers.map((header) => {
+                      return (
+                        <th
+                          key={header.id}
+                          className={`column-${header.id} ${styles.headerCell}`}
+                        >
+                          {header.isPlaceholder ? null : (
+                            <div
+                              onClick={header.column.getToggleSortingHandler()}
+                            >
+                              {flexRender(
+                                header.column.columnDef.header,
+                                header.getContext()
+                              )}
+                              <img
+                                src={
+                                  sortingOptions[
+                                    header.column.getIsSorted() as SortingDirection
+                                  ] ?? null
+                                }
+                                alt={`Sort column ${header.id}`}
+                              />
+                            </div>
+                          )}
+                        </th>
+                      );
+                    })}
+                  </tr>
+                );
+              })}
+            </thead>
+            <tbody className={styles.tbody}>
+              {paddingTop > 0 && (
+                <tr>
+                  <td style={{ height: `${paddingTop}px` }} />
                 </tr>
-              );
-            })}
-          </thead>
-          <tbody className={styles.tbody}>
-            {paddingTop > 0 && (
-              <tr>
-                <td style={{ height: `${paddingTop}px` }} />
-              </tr>
-            )}
-            {virtualRows.map((virtualRow) => {
-              const row = rows[virtualRow.index];
-              return (
-                <tr key={row.id} className={styles.row}>
-                  {row.getVisibleCells().map((cell) => {
-                    return (
-                      <td key={cell.id} className={styles.cell}>
-                        {flexRender(
-                          cell.column.columnDef.cell,
-                          cell.getContext()
-                        )}
-                      </td>
-                    );
-                  })}
+              )}
+              {virtualRows.map((virtualRow) => {
+                const row = rows[virtualRow.index];
+                return (
+                  <tr key={row.id} className={styles.row}>
+                    {row.getVisibleCells().map((cell) => {
+                      return (
+                        <td key={cell.id} className={styles.cell}>
+                          {flexRender(
+                            cell.column.columnDef.cell,
+                            cell.getContext()
+                          )}
+                        </td>
+                      );
+                    })}
+                  </tr>
+                );
+              })}
+              {paddingBottom > 0 && (
+                <tr>
+                  <td style={{ height: `${paddingBottom}px` }} />
                 </tr>
-              );
-            })}
-            {paddingBottom > 0 && (
-              <tr>
-                <td style={{ height: `${paddingBottom}px` }} />
-              </tr>
-            )}
-          </tbody>
-        </table>
+              )}
+            </tbody>
+          </table>
+        ) : (
+          <span className={styles.noResultsMsg}>
+            No results by your query, please try something else
+          </span>
+        )}
       </div>
       {isModalOpen && (
         <Modal isOpen={!!isModalOpen} onClose={setIsModalOpen}>

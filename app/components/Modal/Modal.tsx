@@ -57,7 +57,9 @@ export const Modal = ({
 
   return (
     <dialog ref={modalRef} onKeyDown={handleKeyDown} className={styles.modal}>
-      <button onClick={handleCloseModal}>Close</button>
+      <button onClick={handleCloseModal}>
+        <img src="/close.png" alt="Close modal" />
+      </button>
       {children}
     </dialog>
   );

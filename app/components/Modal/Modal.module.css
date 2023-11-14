@@ -21,3 +21,7 @@
   right: 3%;
   top: 7%;
 }
+
+.modal button img {
+  width: 1rem;
+}

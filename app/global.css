@@ -3,9 +3,16 @@
   --palette-hover: #f8fafc;
   --palette-mainText: #1c1c1c;
 
+  --spacing-l: 1.8rem;
+  --spacing-m: 1.5rem;
   --spacing-s: 1rem;
   --spacing-xs: 0.5rem;
   --spacing-xxs: 0.2rem;
+
+  --font-size-h: 2.5rem;
+  --font-size-stat: 1.5rem;
+  --font-size-regular: 0.9rem;
+  --font-size-label: 0.8rem;
 }
 
 html,
@@ -33,7 +40,7 @@ a {
 span {
   font-weight: 300;
   font-style: normal;
-  font-size: 0.9rem;
+  font-size: var(--font-size-regular);
 }
 
 img {

@@ -1,0 +1,38 @@
+.wrapper {
+  display: flex;
+  justify-content: space-around;
+}
+
+.stat {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: var(--spacing-xs);
+}
+
+.header {
+  align-self: center;
+  margin-top: auto;
+  font-size: var(--font-size-h);
+}
+
+.value {
+  font-size: var(--font-size-stat);
+}
+
+.label {
+  text-transform: uppercase;
+  font-size: var(--font-size-label);
+  color: rgb(100, 100, 100);
+}
+
+.cover {
+  position: absolute;
+  width: 6rem;
+}
+
+.climateWrapper {
+  display: flex;
+  align-items: center;
+  gap: var(--spacing-xs);
+}

@@ -6,6 +6,7 @@ import React, {
   useRef,
   useState,
 } from "react";
+import styles from "./Modal.module.css";
 
 export const Modal = ({
   isOpen,
@@ -55,7 +56,7 @@ export const Modal = ({
   }, [isModalOpen]);
 
   return (
-    <dialog ref={modalRef} onKeyDown={handleKeyDown}>
+    <dialog ref={modalRef} onKeyDown={handleKeyDown} className={styles.modal}>
       <button onClick={handleCloseModal}>Close</button>
       {children}
     </dialog>

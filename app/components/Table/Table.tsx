@@ -150,7 +150,7 @@ export const Table = ({ people, planets }: TableProps) => {
     [SortingDirection.false]: "/unfold.png",
   };
   const nameColumn = table.getAllColumns().find((col) => col.id === "name");
-
+  console.log(planets);
   return (
     <>
       <SearchField

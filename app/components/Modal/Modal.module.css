@@ -1,0 +1,23 @@
+.modal {
+  padding: var(--spacing-l);
+  min-width: 40%;
+  min-height: 25%;
+  border: none;
+  display: flex;
+  flex-direction: column;
+  border-radius: 20px;
+
+  @media (max-width: 950px) {
+    width: 90%;
+  }
+}
+
+.modal button {
+  margin-left: auto;
+  border: 0;
+  background-color: transparent;
+  cursor: pointer;
+  position: absolute;
+  right: 3%;
+  top: 7%;
+}

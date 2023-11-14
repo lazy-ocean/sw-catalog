@@ -40,7 +40,7 @@ export interface PlanetData {
   name: string;
   population: string;
   diameter: string;
-  climate: string;
+  climate: ClimateTypes;
   color: string;
   // not required by task
   /*   rotation_period: "unknown";
@@ -59,4 +59,19 @@ export enum SortingDirection {
   asc = "asc",
   desc = "desc",
   false = "false",
+}
+
+export enum ClimateTypes {
+  temperate = "temperate",
+  unknown = "unknown",
+  moist = "moist",
+  polluted = "polluted",
+  arid = "arid",
+  tropical = "tropical",
+  rocky = "rocky",
+  windy = "windy",
+  frigid = "frigid",
+  hot = "hot",
+  subarctic = "subarctic",
+  superheated = "superheated",
 }

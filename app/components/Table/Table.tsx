@@ -2,7 +2,6 @@
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import {
   createColumnHelper,
-  flexRender,
   getCoreRowModel,
   useReactTable,
   SortingState,
@@ -20,8 +19,9 @@ import { SearchField } from "../SearchField/SearchField";
 import styles from "./Table.module.css";
 import { formatDate, formatNumberValue } from "../../utils/formatters";
 import { PlanetButton } from "../PlanetButton/PlanetButton";
-import { SortIcon } from "../SortIcon/SortIcon";
 import { sortPlanets } from "../../utils/sortPlanets";
+import { HeaderCell } from "./HeaderCell";
+import { TableRow } from "./Row";
 
 const FormatedTableValue = ({ value }: { value: number }) => {
   return value ? (
@@ -36,7 +36,6 @@ const FormatedTableValue = ({ value }: { value: number }) => {
 };
 
 export const Table = ({ people, planets }: TableProps) => {
-  const data = people;
   const [isModalOpen, setIsModalOpen] = useState<string | false>(false);
   const [sorting, setSorting] = useState<SortingState>([]);
   const [nameFilterValue, setNameFilterValue] = useState("");
@@ -127,12 +126,14 @@ export const Table = ({ people, planets }: TableProps) => {
       }),
       columnHelper.accessor((row) => row.homeworld, {
         id: "homeworld",
-        cell: (info) => {
-          const planetId = info.getValue();
+        cell: ({ row, getValue }) => {
+          const planetId = getValue();
+          console.log(planets);
           return (
             <PlanetButton
               value={planetId}
-              color={planets[planetId].color}
+              id={row.original.homeworldId}
+              color={planets[row.original.homeworldId].color}
               handleClick={setIsModalOpen}
             />
           );
@@ -156,7 +157,7 @@ export const Table = ({ people, planets }: TableProps) => {
   );
 
   const table = useReactTable({
-    data,
+    data: people,
     columns,
     getCoreRowModel: getCoreRowModel(),
     getFilteredRowModel: getFilteredRowModel(),
@@ -204,29 +205,15 @@ export const Table = ({ people, planets }: TableProps) => {
             <thead className={styles.header}>
               {table.getHeaderGroups().map((headerGroup) => (
                 <tr key={headerGroup.id}>
-                  {headerGroup.headers.map((header) => {
-                    const col = header.column;
-                    return (
-                      <th
-                        key={header.id}
-                        className={styles.headerCell}
-                        style={{ width: header.getSize() }}
-                      >
-                        <div onClick={col.getToggleSortingHandler()}>
-                          {flexRender(
-                            col.columnDef.header,
-                            header.getContext()
-                          )}
-                          {col.getCanSort() && (
-                            <SortIcon
-                              dir={col.getIsSorted() as SortDirection}
-                              id={header.id}
-                            />
-                          )}
-                        </div>
-                      </th>
-                    );
-                  })}
+                  {headerGroup.headers.map((header) => (
+                    <HeaderCell
+                      id={header.id}
+                      col={header.column}
+                      size={header.getSize()}
+                      context={header.getContext()}
+                      key={header.id}
+                    />
+                  ))}
                 </tr>
               ))}
             </thead>
@@ -234,18 +221,7 @@ export const Table = ({ people, planets }: TableProps) => {
               {spacerTop > 0 && <tr style={{ height: `${spacerTop}px` }}></tr>}
               {virtualRows.map((virtualRow) => {
                 const row = rows[virtualRow.index];
-                return (
-                  <tr key={row.id} className={styles.row}>
-                    {row.getVisibleCells().map((cell) => (
-                      <td key={cell.id} className={styles.cell}>
-                        {flexRender(
-                          cell.column.columnDef.cell,
-                          cell.getContext()
-                        )}
-                      </td>
-                    ))}
-                  </tr>
-                );
+                return <TableRow data={rows[virtualRow.index]} key={row.id} />;
               })}
               {spacerEnd > 0 && <tr style={{ height: `${spacerEnd}px` }} />}
             </tbody>

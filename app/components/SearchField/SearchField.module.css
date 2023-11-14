@@ -10,6 +10,7 @@
   top: 35%;
   border: none;
   background-color: transparent;
+  cursor: pointer;
 }
 
 .searchWrapper button img {

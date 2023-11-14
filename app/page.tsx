@@ -3,7 +3,7 @@ import Main from "./components/Main/Main";
 import { Person, PlanetData, SwListData } from "./interfaces";
 
 const API_LINK = "https://swapi.dev/api/people";
-// TODO: slice unnecessary data??
+
 async function getData(): Promise<{
   people: Person[];
   planets: { [key: string]: PlanetData };
@@ -37,14 +37,16 @@ async function getData(): Promise<{
         if (!planetsData[homeworldURL]) {
           const planetResponse = await fetch(homeworldURL);
           planetData = await planetResponse.json();
+
           const color = uniqolor(planetData.name as string, {
             saturation: 50,
             lightness: [70, 90],
           }).color;
-          planetsData[planetData.name] = { ...planetData, color };
-        }
 
-        person.homeworld = planetData.name;
+          planetsData[homeworldURL] = { ...planetData, color };
+          person.homeworld = planetData.name;
+          person.homeworldId = homeworldURL;
+        }
       })
     );
 

@@ -9,12 +9,13 @@ const climateMapping = {
   [ClimateTypes.moist]: "💧",
   [ClimateTypes.polluted]: "🌫️",
   [ClimateTypes.rocky]: "🪨",
-  [ClimateTypes.subarctic]: "🧊",
+  [ClimateTypes.subartic]: "🧊",
+  [ClimateTypes.artic]: "🧊",
   [ClimateTypes.superheated]: "🔥",
   [ClimateTypes.temperate]: "🌱",
   [ClimateTypes.tropical]: "🌴",
   [ClimateTypes.windy]: "༄",
-  [ClimateTypes.unknown]: "❓",
+  [ClimateTypes.unknown]: "unknown",
 };
 
 export const ClimateData = ({
@@ -34,7 +35,7 @@ export const ClimateData = ({
         {res.map(({ value, climate }) => (
           <React.Fragment key={value}>
             <span className={styles.value}>{value}</span>
-            <span>{climate}</span>
+            {climate !== ClimateTypes.unknown && <span>{climate}</span>}
           </React.Fragment>
         ))}
       </div>

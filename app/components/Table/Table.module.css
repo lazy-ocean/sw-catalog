@@ -32,6 +32,7 @@
 .headerCell div {
   display: flex;
   gap: var(--spacing-xs);
+  cursor: pointer;
 }
 
 .headerCell {

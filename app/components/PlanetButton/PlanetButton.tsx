@@ -4,14 +4,16 @@ export const PlanetButton = ({
   value,
   handleClick,
   color,
+  id,
 }: {
   value: string;
   color: string;
   handleClick: (v: string) => void;
+  id: string;
 }) => {
   return value !== "unknown" ? (
     <button
-      onClick={() => handleClick(value)}
+      onClick={() => handleClick(id)}
       className={styles.planetButton}
       style={{ ["--color" as string]: color }}
     >

@@ -18,7 +18,7 @@ export interface Person {
   created: string;
   edited: string;
   homeworld: string;
-  homeworldData: { id: string; name: string };
+  homeworldId: string;
 }
 
 export interface SwListData {
@@ -53,6 +53,7 @@ export enum ClimateTypes {
   windy = "windy",
   frigid = "frigid",
   hot = "hot",
-  subarctic = "subarctic",
+  subartic = "subartic",
+  artic = "artic",
   superheated = "superheated",
 }

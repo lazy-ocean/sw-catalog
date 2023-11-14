@@ -258,7 +258,10 @@ export const Table = ({ people, planets }: TableProps) => {
       </div>
       {isModalOpen && (
         <Modal isOpen={!!isModalOpen} onClose={setIsModalOpen}>
-          <ModalContent data={planets[isModalOpen]} />
+          <ModalContent
+            data={planets[isModalOpen]}
+            color={planets[isModalOpen].color}
+          />
         </Modal>
       )}
     </>

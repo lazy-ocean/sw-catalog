@@ -1,45 +1,35 @@
-import { PlanetData, ClimateTypes } from "../../interfaces";
+import { PlanetData } from "../../interfaces";
 import styles from "./ModalContent.module.css";
-
-const climateMapping = {
-  [ClimateTypes.arid]: "🏜️",
-  [ClimateTypes.frigid]: "❄️",
-  [ClimateTypes.hot]: "☀️",
-  [ClimateTypes.moist]: "💧",
-  [ClimateTypes.polluted]: "🌫️",
-  [ClimateTypes.rocky]: "🪨",
-  [ClimateTypes.subarctic]: "🧊",
-  [ClimateTypes.superheated]: "🔥",
-  [ClimateTypes.temperate]: "🌱",
-  [ClimateTypes.tropical]: "🌴",
-  [ClimateTypes.windy]: "༄",
-  [ClimateTypes.unknown]: "❓",
-};
+import { ClimateData } from "./PlanetModal/ClimateData";
+import { PlanetIcon } from "./PlanetModal/PlanetIcon";
 
 const formatValue = (item: string | number) =>
   isNaN(Number(item)) ? item : Number(item).toLocaleString();
 
-export const ModalContent = ({ data }: { data: PlanetData }) => {
+export const ModalContent = ({
+  data,
+  color,
+}: {
+  data: PlanetData;
+  color: string;
+}) => {
   const { name, population, diameter, climate } = data;
 
   const datamap = [
     { label: "Diameter", value: formatValue(diameter) },
     { label: "Population", value: formatValue(population) },
-    { label: "Climate", value: climateMapping[climate] },
+    { label: "Climate" },
   ];
 
   return (
     <>
-      <img src="/planet.png" alt={name} className={styles.cover} />
+      <PlanetIcon color={color} />
       <h2 className={styles.header}>{name}</h2>
       <div className={styles.wrapper}>
         {datamap.map(({ label, value }) => (
           <div className={styles.stat} key={label}>
             {label === "Climate" ? (
-              <div className={styles.climateWrapper}>
-                <span className={styles.value}>{value}</span>
-                <span>{climate}</span>
-              </div>
+              <ClimateData climate={climate} />
             ) : (
               <span className={styles.value}>{value}</span>
             )}

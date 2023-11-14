@@ -26,14 +26,3 @@
   font-size: var(--font-size-label);
   color: rgb(100, 100, 100);
 }
-
-.cover {
-  position: absolute;
-  width: 6rem;
-}
-
-.climateWrapper {
-  display: flex;
-  align-items: center;
-  gap: var(--spacing-xs);
-}

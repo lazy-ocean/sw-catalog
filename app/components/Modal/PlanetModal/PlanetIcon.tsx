@@ -4,7 +4,12 @@ export const PlanetIcon = ({ color }: { color: string }) => (
     id="Layer_1"
     xmlns="http://www.w3.org/2000/svg"
     viewBox="0 0 512 512"
-    style={{ position: "absolute", width: "6rem", height: "6rem" }}
+    style={{
+      position: "absolute",
+      width: "5.5rem",
+      height: "5.5rem",
+      top: "10%",
+    }}
   >
     <circle
       style={{ fill: color, filter: "brightness(0.9)" }}

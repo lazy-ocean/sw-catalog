@@ -1,11 +1,11 @@
 .modal {
   padding: var(--spacing-l);
   min-width: 50%;
-  min-height: 25%;
   border: none;
   display: flex;
   flex-direction: column;
   border-radius: var(--border-radius);
+  justify-content: center;
 
   @media (max-width: 950px) {
     width: 90%;

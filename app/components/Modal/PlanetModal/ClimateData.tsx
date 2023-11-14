@@ -33,10 +33,10 @@ export const ClimateData = ({
     return (
       <div className={styles.climateWrapper}>
         {res.map(({ value, climate }) => (
-          <React.Fragment key={value}>
+          <div key={value}>
             <span className={styles.value}>{value}</span>
             {climate !== ClimateTypes.unknown && <span>{climate}</span>}
-          </React.Fragment>
+          </div>
         ))}
       </div>
     );

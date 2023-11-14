@@ -1,6 +1,7 @@
 .wrapper {
   display: flex;
   justify-content: space-around;
+  gap: var(--spacing-l);
 }
 
 .stat {

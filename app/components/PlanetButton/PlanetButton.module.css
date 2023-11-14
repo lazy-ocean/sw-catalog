@@ -1,0 +1,18 @@
+.planetButton {
+  background-color: var(--color);
+  border: none;
+  border-radius: var(--border-radius);
+  cursor: pointer;
+  min-height: 2rem;
+  padding: var(--spacing-xs) var(--spacing-m);
+  text-align: start;
+  transition: filter 0.2s;
+}
+
+.planetButton:hover {
+  filter: brightness(0.9);
+}
+
+.unknownIcon {
+  height: 2rem;
+}

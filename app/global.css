@@ -13,6 +13,9 @@
   --font-size-stat: 1.5rem;
   --font-size-regular: 0.9rem;
   --font-size-label: 0.8rem;
+
+  --border: 1px solid var(--palette-border);
+  --border-radius: 20px;
 }
 
 html,

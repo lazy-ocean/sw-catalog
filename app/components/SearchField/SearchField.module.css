@@ -3,6 +3,19 @@
   width: 100%;
 }
 
+.searchWrapper button {
+  position: absolute;
+  transform: translateY(-50%);
+  right: 10px;
+  top: 35%;
+  border: none;
+  background-color: transparent;
+}
+
+.searchWrapper button img {
+  height: 0.8rem;
+}
+
 .searchIcon {
   position: absolute;
   top: 35%;
@@ -17,13 +30,13 @@
   margin-bottom: var(--spacing-s);
   width: 100%;
   border: 0;
-  border-bottom: 1px solid var(--palette-border);
-  font-size: 1rem;
-  border-radius: 20px;
-  background-color: #f5f5f5;
+  border-bottom: var(--border);
+  font-size: var(--font-size-regular);
+  border-radius: var(--border-radius);
+  background-color: var(--palette-hover);
 }
 
 .input::placeholder {
-  font-size: 0.9rem;
+  font-size: var(--font-size-label);
   color: color-mix(in srgb, var(--palette-mainText) 40%, transparent);
 }

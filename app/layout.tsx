@@ -3,8 +3,8 @@ import "./global.css";
 import { Roboto } from "next/font/google";
 
 export const metadata = {
-  title: "Home",
-  description: "SWAPI data",
+  title: "SW catalogue",
+  description: "Star Wars creatures catalogue",
 };
 
 const roboto = Roboto({

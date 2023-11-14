@@ -1,7 +1,7 @@
 .container {
   max-height: 500px;
   overflow: auto;
-  border-bottom: 1px solid var(--palette-border);
+  border-bottom: var(--border);
 }
 
 .table {
@@ -11,7 +11,7 @@
 
 .row {
   height: 4rem;
-  border-bottom: 1px solid var(--palette-border);
+  border-bottom: var(--border);
 }
 
 .row:hover {
@@ -20,13 +20,14 @@
 
 .cell {
   padding: var(--spacing-s);
-  border-bottom: 1px solid var(--palette-border);
+  border-bottom: var(--border);
 }
 
 .header {
   background-color: white;
   position: sticky;
   top: 0px;
+  box-shadow: 0 0px 50px 0px #d3d3d3;
 }
 
 .headerCell div {
@@ -37,10 +38,15 @@
 .headerCell {
   padding: var(--spacing-s);
   text-align: left;
-  border-bottom: 1px solid var(--palette-border);
+  border-bottom: var(--border);
   text-transform: uppercase;
-  font-size: 0.8rem;
+  font-size: var(--font-size-label);
   position: sticky;
+}
+
+.headerCell:nth-child(1),
+.cell:nth-child(1) {
+  padding-right: 0;
 }
 
 .headerCell:nth-child(2),
@@ -63,21 +69,7 @@
   margin-left: auto;
 }
 
-.table img {
-  height: 2rem;
-}
-
-.headerCell img {
-  height: 1rem;
-}
-
-.planetButton {
-  background-color: var(--color);
-  border: none;
-  padding: var(--spacing-xs);
-  border-radius: 5px;
-  cursor: pointer;
-  text-decoration: underline;
+.unknownIcon {
   height: 2rem;
 }
 

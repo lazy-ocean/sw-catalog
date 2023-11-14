@@ -1,5 +1,5 @@
 "use client";
-import { useEffect, useMemo, useRef, useState } from "react";
+import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import {
   createColumnHelper,
   flexRender,
@@ -12,21 +12,26 @@ import {
 } from "@tanstack/react-table";
 import { Table as TableInterface } from "@tanstack/react-table";
 import { useVirtual } from "react-virtual";
-import { Person, SortingDirection, TableProps } from "../../interfaces";
+import { Person, SortDirection, TableProps } from "../../interfaces";
 import { usePathname, useRouter, useSearchParams } from "next/navigation";
 import { Modal } from "../Modal/Modal";
 import { ModalContent } from "../Modal/ModalContent";
 import { SearchField } from "../SearchField/SearchField";
 import styles from "./Table.module.css";
 import { formatDate } from "../../utils/formatDate";
+import { PlanetButton } from "../PlanetButton/PlanetButton";
+import { SortIcon } from "../SortIcon/SortIcon";
 
-const FormatedTableValue = ({ value }: { value: string }) => {
-  return value !== "unknown" ? (
+const FormatedTableValue = ({ value }: { value: string }) =>
+  value !== "unknown" ? (
     <span>{value}</span>
   ) : (
-    <img src="/question.png" alt="unknown data" />
+    <img
+      src="/question.png"
+      alt="unknown data"
+      className={styles.unknownIcon}
+    />
   );
-};
 
 export const Table = ({ people, planets }: TableProps) => {
   const data = people;
@@ -46,7 +51,7 @@ export const Table = ({ people, planets }: TableProps) => {
       const sortingQuery = params.get("sortBy");
       if (sortingQuery) {
         const [id, query] = sortingQuery.split(":");
-        setSorting([{ id, desc: query === SortingDirection.desc }]);
+        setSorting([{ id, desc: query === SortDirection.desc }]);
       }
 
       const filterQuery = params.get("name");
@@ -70,7 +75,7 @@ export const Table = ({ people, planets }: TableProps) => {
       params.set(
         "sortBy",
         `${sorting[0].id}:${
-          sorting[0].desc ? SortingDirection.desc : SortingDirection.asc
+          sorting[0].desc ? SortDirection.desc : SortDirection.asc
         }`
       );
     }
@@ -78,25 +83,12 @@ export const Table = ({ people, planets }: TableProps) => {
     router.push(pathname + "?" + params.toString());
   }, [pathname, searchParams, sorting, router, nameFilterValue]);
 
-  const PlanetButton = ({ value }: { value: string }) => {
-    return value !== "unknown" ? (
-      <button
-        onClick={() => setIsModalOpen(value)}
-        className={styles.planetButton}
-        style={{ ["--color" as string]: planets[value].color }}
-      >
-        {value}
-      </button>
-    ) : (
-      <img src="/question.png" alt="unknown data" />
-    );
-  };
-
   const columns = useMemo(
     () => [
       {
         Header: "No",
         id: "id",
+        maxSize: 10,
         cell: ({
           row,
           table,
@@ -133,7 +125,16 @@ export const Table = ({ people, planets }: TableProps) => {
       }),
       columnHelper.accessor((row) => row.homeworld, {
         id: "homeworld",
-        cell: (info) => <PlanetButton value={info.getValue()} />,
+        cell: (info) => {
+          const planetId = info.getValue();
+          return (
+            <PlanetButton
+              value={planetId}
+              color={planets[planetId].color}
+              handleClick={setIsModalOpen}
+            />
+          );
+        },
         header: () => <span>Homeworld</span>,
       }),
       columnHelper.accessor((row) => row.created, {
@@ -168,20 +169,16 @@ export const Table = ({ people, planets }: TableProps) => {
     parentRef: tableContainerRef,
     size: rows.length,
     overscan: 10,
+    estimateSize: useCallback(() => 80, []),
   });
 
   const { virtualItems: virtualRows, totalSize } = rowVirtualizer;
 
-  const sortingOptions = {
-    [SortingDirection.asc]: "/arrow-down.png",
-    [SortingDirection.desc]: "/arrow-up.png",
-    [SortingDirection.false]: "/unfold.png",
-  };
   const nameColumn = table.getAllColumns().find((col) => col.id === "name");
 
-  // to ensure correct scrolling
-  const paddingTop = virtualRows.length > 0 ? virtualRows?.[0]?.start || 0 : 0;
-  const paddingBottom =
+  // to ensure correct virtualized scrolling
+  const spacerTop = virtualRows.length > 0 ? virtualRows?.[0]?.start || 0 : 0;
+  const spacerEnd =
     virtualRows.length > 0
       ? totalSize - (virtualRows?.[virtualRows.length - 1]?.end || 0)
       : 0;
@@ -189,9 +186,9 @@ export const Table = ({ people, planets }: TableProps) => {
   return (
     <>
       <SearchField
-        setSearch={(e) => {
-          setNameFilterValue(e.target.value);
-          nameColumn?.setFilterValue(e.target.value);
+        setSearch={(value) => {
+          setNameFilterValue(value);
+          nameColumn?.setFilterValue(value);
         }}
         value={nameFilterValue}
       />
@@ -199,73 +196,57 @@ export const Table = ({ people, planets }: TableProps) => {
         {virtualRows.length ? (
           <table className={styles.table}>
             <thead className={styles.header}>
-              {table.getHeaderGroups().map((headerGroup) => {
-                return (
-                  <tr key={headerGroup.id}>
-                    {headerGroup.headers.map((header) => {
-                      return (
-                        <th
-                          key={header.id}
-                          className={`column-${header.id} ${styles.headerCell}`}
-                        >
-                          {header.isPlaceholder ? null : (
-                            <div
-                              onClick={header.column.getToggleSortingHandler()}
-                            >
-                              {flexRender(
-                                header.column.columnDef.header,
-                                header.getContext()
-                              )}
-                              <img
-                                src={
-                                  sortingOptions[
-                                    header.column.getIsSorted() as SortingDirection
-                                  ] ?? null
-                                }
-                                alt={`Sort column ${header.id}`}
-                              />
-                            </div>
+              {table.getHeaderGroups().map((headerGroup) => (
+                <tr key={headerGroup.id}>
+                  {headerGroup.headers.map((header) => {
+                    const col = header.column;
+                    return (
+                      <th
+                        key={header.id}
+                        className={styles.headerCell}
+                        style={{ width: header.getSize() }}
+                      >
+                        <div onClick={col.getToggleSortingHandler()}>
+                          {flexRender(
+                            col.columnDef.header,
+                            header.getContext()
                           )}
-                        </th>
-                      );
-                    })}
-                  </tr>
-                );
-              })}
+                          {col.getCanSort() && (
+                            <SortIcon
+                              dir={col.getIsSorted() as SortDirection}
+                              id={header.id}
+                            />
+                          )}
+                        </div>
+                      </th>
+                    );
+                  })}
+                </tr>
+              ))}
             </thead>
             <tbody className={styles.tbody}>
-              {paddingTop > 0 && (
-                <tr>
-                  <td style={{ height: `${paddingTop}px` }} />
-                </tr>
-              )}
+              {spacerTop > 0 && <tr style={{ height: `${spacerTop}px` }}></tr>}
               {virtualRows.map((virtualRow) => {
                 const row = rows[virtualRow.index];
                 return (
                   <tr key={row.id} className={styles.row}>
-                    {row.getVisibleCells().map((cell) => {
-                      return (
-                        <td key={cell.id} className={styles.cell}>
-                          {flexRender(
-                            cell.column.columnDef.cell,
-                            cell.getContext()
-                          )}
-                        </td>
-                      );
-                    })}
+                    {row.getVisibleCells().map((cell) => (
+                      <td key={cell.id} className={styles.cell}>
+                        {flexRender(
+                          cell.column.columnDef.cell,
+                          cell.getContext()
+                        )}
+                      </td>
+                    ))}
                   </tr>
                 );
               })}
-              {paddingBottom > 0 && (
-                <tr>
-                  <td style={{ height: `${paddingBottom}px` }} />
-                </tr>
-              )}
+              {spacerEnd > 0 && <tr style={{ height: `${spacerEnd}px` }} />}
             </tbody>
           </table>
         ) : (
           <span className={styles.noResultsMsg}>
-            No results by your query, please try something else
+            No results for your query, please try something else
           </span>
         )}
       </div>

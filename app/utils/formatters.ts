@@ -4,3 +4,8 @@ export const formatDate = (timestamp: string): string => {
   const formattedDate = date.toLocaleString("en-GB");
   return formattedDate;
 };
+
+export const formatNumberValue = (value: string) => {
+  const result = Number(value.replace(/,/g, ""));
+  return isNaN(result) ? 0 : result;
+};

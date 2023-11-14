@@ -18,12 +18,13 @@ import { Modal } from "../Modal/Modal";
 import { ModalContent } from "../Modal/ModalContent";
 import { SearchField } from "../SearchField/SearchField";
 import styles from "./Table.module.css";
-import { formatDate } from "../../utils/formatDate";
+import { formatDate, formatNumberValue } from "../../utils/formatters";
 import { PlanetButton } from "../PlanetButton/PlanetButton";
 import { SortIcon } from "../SortIcon/SortIcon";
+import { sortPlanets } from "../../utils/sortPlanets";
 
-const FormatedTableValue = ({ value }: { value: string }) =>
-  value !== "unknown" ? (
+const FormatedTableValue = ({ value }: { value: number }) => {
+  return value ? (
     <span>{value}</span>
   ) : (
     <img
@@ -32,6 +33,7 @@ const FormatedTableValue = ({ value }: { value: string }) =>
       className={styles.unknownIcon}
     />
   );
+};
 
 export const Table = ({ people, planets }: TableProps) => {
   const data = people;
@@ -113,12 +115,12 @@ export const Table = ({ people, planets }: TableProps) => {
         ),
         header: () => <span>Name</span>,
       }),
-      columnHelper.accessor((row) => row.mass, {
+      columnHelper.accessor((row) => formatNumberValue(row.mass), {
         id: "mass",
         cell: (info) => <FormatedTableValue value={info.getValue()} />,
         header: () => <span>Mass</span>,
       }),
-      columnHelper.accessor((row) => row.height, {
+      columnHelper.accessor((row) => formatNumberValue(row.height), {
         id: "height",
         cell: (info) => <FormatedTableValue value={info.getValue()} />,
         header: () => <span>Height</span>,
@@ -136,6 +138,7 @@ export const Table = ({ people, planets }: TableProps) => {
           );
         },
         header: () => <span>Homeworld</span>,
+        sortingFn: "customSorting",
       }),
       columnHelper.accessor((row) => row.created, {
         id: "created",
@@ -162,6 +165,9 @@ export const Table = ({ people, planets }: TableProps) => {
       sorting,
     },
     onSortingChange: setSorting,
+    sortingFns: {
+      customSorting: sortPlanets,
+    },
   });
 
   const { rows } = table.getRowModel();

@@ -16,6 +16,7 @@ export const PlanetButton = ({
       onClick={() => handleClick(id)}
       className={styles.planetButton}
       style={{ ["--color" as string]: color }}
+      data-testid="planet-button"
     >
       {value}
     </button>

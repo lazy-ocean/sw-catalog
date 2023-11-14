@@ -81,7 +81,9 @@ export const Table = ({ people, planets }: TableProps) => {
       );
     }
 
-    router.push(pathname + "?" + params.toString());
+    if (params?.size > 0) {
+      router.push(pathname + "?" + params.toString());
+    }
   }, [pathname, searchParams, sorting, router, nameFilterValue]);
 
   const columns = useMemo(
@@ -128,7 +130,6 @@ export const Table = ({ people, planets }: TableProps) => {
         id: "homeworld",
         cell: ({ row, getValue }) => {
           const planetId = getValue();
-          console.log(planets);
           return (
             <PlanetButton
               value={planetId}
@@ -201,7 +202,7 @@ export const Table = ({ people, planets }: TableProps) => {
       />
       <div ref={tableContainerRef} className={styles.container}>
         {virtualRows.length ? (
-          <table className={styles.table}>
+          <table className={styles.table} data-testid="sw-table">
             <thead className={styles.header}>
               {table.getHeaderGroups().map((headerGroup) => (
                 <tr key={headerGroup.id}>
